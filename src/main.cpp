@@ -80,16 +80,17 @@ public:
         int rightPaddleY, rightPaddleX = rightPaddle.getPos();
         int paddleWidth, paddleHeight = leftPaddle.getSize();
 
+        // Make ball move at defined speed
         x += ballXDir * ballSpeed;
         y += ballYDir * ballSpeed;
 
-        // Simple collision detection with walls
+        // Collision detection with walls
         if (y < 0 || y + size > screenHeight)
         {
             ballYDir = -ballYDir;
         }
 
-        // Check for paddle collisions
+        // Make ball bounce if collide with a paddle
         if (checkPaddleCollision(rightPaddle, leftPaddle))
         {
             ballXDir = -ballXDir;
@@ -204,6 +205,7 @@ public:
         const int window_width = 800;
         const int window_height = 600;
 
+        // Create the SDL window
         window = SDL_CreateWindow(
             "Pong",
             SDL_WINDOWPOS_UNDEFINED,
@@ -211,12 +213,14 @@ public:
             window_width, window_height,
             SDL_WINDOW_SHOWN);
 
+        // Init SDL renderer and TTF font
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         font = TTF_OpenFont("../\\font\\Inter-Bold.ttf", 24); // Replace with the path to your TTF font file
 
         int paddleWidth = 20;
         int paddleHeight = 100;
 
+        // Init the ball and the right and left paddles
         rightPaddle = Paddle(window_width - paddleWidth, ((window_height - paddleHeight) / 2), paddleWidth, paddleHeight);
         leftPaddle = Paddle(0, ((window_height - paddleHeight) / 2), paddleWidth, paddleHeight);
         ball = Ball(400, 300, 20);
@@ -224,6 +228,7 @@ public:
 
     ~PongGame()
     {
+        // Cleanup resources
         TTF_CloseFont(font);
         TTF_Quit();
 
@@ -237,6 +242,7 @@ public:
         return window_width, window_height;
     }
 
+    // Main game loop
     void run()
     {
         using namespace std::chrono;
@@ -261,6 +267,7 @@ public:
                     // Handle keyboard events
                     switch (event.key.keysym.sym)
                     {
+                    // "P" key to pause the game
                     case SDLK_p:
                         if (isPaused == false)
                         {
@@ -271,8 +278,8 @@ public:
                             isPaused = false;
                         }
                         break;
+                    // "R" key to reset the game
                     case SDLK_r:
-                        // Reset the game when 'R' is pressed
                         if (isPaused == true)
                         {
                             isPaused = false;
@@ -312,6 +319,7 @@ private:
     Paddle leftPaddle;
     Ball ball;
 
+    // Handle input to control left paddle
     void handleInput()
     {
         const int paddleSpeed = 10;
@@ -338,15 +346,16 @@ private:
     {
         if (!isPaused)
         {
-            // Update game logic here
+            // Update game logic
             ball.move(rightPaddle, leftPaddle);
 
-            const int paddleSpeed = 15;
+            const int paddleSpeed = 15;             // Adjust this value to control the speed of the paddles
             const double interpolationFactor = 0.3; // Adjust this value to control the smoothness (0.0 for instant, 1.0 for no change)
 
             int ballCenterY = ball.getRect().y + ball.getRect().h / 2;
             int rightPaddleCenterY = rightPaddle.getRect().y + rightPaddle.getRect().h / 2;
 
+            // Basic AI opponent
             if (ballCenterY < rightPaddleCenterY)
             {
                 rightPaddle.move_up(paddleSpeed * interpolationFactor);
@@ -391,11 +400,12 @@ private:
             // Display score
             renderText(std::to_string(ball.getLeftPlayerPoints()) + " - " + std::to_string(ball.getRightPlayerPoints()), ball.getScreenWidth() / 2 - 50, 20);
 
-            // Render FPS
+            // Display FPS
             renderText("FPS: " + std::to_string(static_cast<int>(fps)), 10, 10);
         }
         else
         {
+            // Display pause mode text
             renderText("PAUSED", ball.getScreenWidth() / 2 - 50, ball.getScreenHeight() / 2 - 10);
         }
 
@@ -404,6 +414,7 @@ private:
         SDL_Delay(16); // 16 milliseconds corresponds to approximately 60 frames per second
     }
 
+    // Render text using TTF
     void renderText(const std::string &text, int x, int y)
     {
         SDL_Color textColor = {255, 255, 255, 255};
