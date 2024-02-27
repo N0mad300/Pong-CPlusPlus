@@ -14,3 +14,7 @@ It's my first C++ project with _SDL2_, the main goal of this project for me was 
 
 - SDL2
 - SDL_TTF
+
+## Project site :
+
+The website of the project : https://n0mad300.github.io/Pong-CPlusPlus/
