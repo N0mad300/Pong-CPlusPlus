@@ -10,11 +10,11 @@ It's my first C++ project with _SDL2_, the main goal of this project for me was 
 - **R** : Reset the game
 - **P** : Pause the game
 
-## Dependances :
+## Dependencies :
 
 - SDL2
 - SDL_TTF
 
-## Project site :
+## Project website :
 
 The website of the project : https://n0mad300.github.io/Pong-CPlusPlus/
